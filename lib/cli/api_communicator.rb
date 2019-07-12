@@ -4,12 +4,11 @@
  require 'json'
 
 
- response_string = RestClient.get("https://api.openbrewerydb.org/breweries")
- $response_hash = JSON.parse(response_string)
-
 class CommandLineInterface
 
   def greet
+    puts
+    puts                "BINDER"
     puts
     puts "Welcome to Binder, your brewery finder application!"
     puts "We can help you find all of the finest breweries in your area."
@@ -17,77 +16,47 @@ class CommandLineInterface
     puts
   end
 
-  def gets_user_input
-    puts "Enter your name and we will get started:"
-     str = gets.chomp
-     puts
-     puts "HELLO!!!"
-     puts
-     puts "Enter your desired location(city):"
-     str1 = gets.chomp
-     info = RestClient.get("https://api.openbrewerydb.org/breweries?by_city=#{str1}")
-     city = JSON.parse(info)
-     brewery_type = JSON.parse(info)
-     puts
-     get_city(city)
-     puts
-     # str3 = gets.chomp
-     puts
-     puts "Now select category(micro, regional, brew_pub, large, planning, bar, contract, properties):"
-     str4 = gets.chomp
-     puts
-     # binding.pry
-     get_category(brewery_type)
-
+  def gets_user
+      User.create_user
   end
 
-  def get_city(city)
-    city.each do |brewery|
+  
+
+
+  def gets_user_input
+     puts "Now select category(micro, regional, brewpub):"
+     str4 = gets.chomp
+     puts
+     get_category(str4)
+     puts
+     puts "Thank you for visiting! Let us know how your brewery experience was:"
+     str6 = gets.chomp
+     puts
+  end
+#
+  def get_city(arg)
+    arg.each do |brewery|
       puts brewery["name"]
     end
   end
 
-  def get_category(brewery_type)
-    breweries = brewery_type.select do |brewery|
-     brewery_type == brewery["brewery_type"]
-   end
-   puts breweries
+  def get_category(arg)
+    $city.each do |hash|
+        if hash["brewery_type"] == arg
+          puts hash["name"]
+      end
+    end
   end
+#
 
 
-
-
-
-
-
-
-
-  # def fin
-  #   $response_hash.each do |hash|
-  #     hash.each do
-  #     if hash == "micro"
-  #       puts $response_hash["name"]
-  #     end
-  #   end
-  # end
-
-
-
-
-
-# binding.pry
-
-
-  def find_reviews(brewery)
-    brewery.reviews
-  end
-
-
-  def run
-    greet
-    input = gets_user_input
-    find_brewery(input)
-    # binding.pry
-  end
 
 end
+  Review.destroy_all
+
+
+r1 = Review.create(rating: "I loved it!")
+r2 = Review.create(rating: "I hated it!")
+r3 = Review.create(rating: "It was better than i expected.")
+r4 = Review.create(rating: "It was not as good as i thought it was going to be.")
+r5 = Review.create(rating: "It was ok.")
